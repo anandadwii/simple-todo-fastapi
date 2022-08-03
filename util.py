@@ -5,6 +5,7 @@ bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def successful_response(status_code: int, message: str):
+    """response function"""
     return {
         'status code': status_code,
         'transaction': message

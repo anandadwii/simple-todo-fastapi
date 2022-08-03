@@ -11,28 +11,27 @@ from util import verify_password
 SECRET_KEY = "lmaoxd1234!"
 ALGORITHM = "HS256"
 
-
 router = APIRouter(
     prefix='/auth',
     tags=['OAuth2']
 )
-
 
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth")
 
 
 @router.post('/')
 async def user_login_get_token(user_credential: OAuth2PasswordRequestForm = Depends()):
+    """login to obtain JWT token"""
     query = await database.find_user(user_credential.username)
     if query:
         if verify_password(user_credential.password, query['password']):
             access_token = create_access_token(data={"email": user_credential.username}
-            )
+                                               )
         return {
             "access token": access_token,
             "token type": "bearer"
         }
-        raise HTTPException(404,'invalid credentials')
+        raise HTTPException(404, 'invalid credentials')
     raise HTTPException(404, 'user not found')
 
 
@@ -49,7 +48,7 @@ def verify_access_token(token: str, credentials_exception: HTTPException):
     return token_data
 
 
-async def get_current_user(token:str = Depends(oauth2_bearer)):
+async def get_current_user(token: str = Depends(oauth2_bearer)):
     """get current verify user login by decode the JWT"""
     credentials_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                                           detail='could not validate credentials',
