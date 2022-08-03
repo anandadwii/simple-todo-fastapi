@@ -1,3 +1,4 @@
+from fastapi.encoders import jsonable_encoder
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 from fastapi import HTTPException
@@ -14,11 +15,12 @@ users_collection.create_index('email', unique=True)
 
 
 async def find_user(email: str):
-    ''' find user '''
+    """ find user """
     return users_collection.find_one({"email": email})
 
 
 async def create_user(user: dict):
+    """ create new user"""
     user['password'] = hashed_password(user['password'])
     try:
         check = users_collection.find_one({"email": user['email']})
@@ -31,6 +33,7 @@ async def create_user(user: dict):
 
 
 async def delete_user(email: str):
+    """delete user"""
     search = users_collection.find_one({'email': email})
     if search:
         users_collection.delete_one({'email': email})
@@ -40,7 +43,7 @@ async def delete_user(email: str):
 
 
 async def db_parser(cursor: Cursor):
-    ''' parse data from database into lists '''
+    """ parse data from database into lists """
     notes = []
     for doc in cursor:
         notes.append(
@@ -49,13 +52,14 @@ async def db_parser(cursor: Cursor):
 
 
 async def find_all_todo(current_user: str):
-    find = todos_collections.find({"owner":current_user})
+    """fetch all todo list from current user"""
+    find = todos_collections.find({"owner": current_user})
     result = await db_parser(find)
     return result
 
 
 async def find_todo_by_title(current_user: str, title: str):
-    ''' fetch every note from owner '''
+    """ fetch every note from owner by title """
     query = todos_collections.find(
         {'title': {"$regex": title}, 'owner': current_user})
     result = await db_parser(query)
@@ -63,13 +67,14 @@ async def find_todo_by_title(current_user: str, title: str):
 
 
 async def create_todo(todo: dict, current_user: str):
-    ''' create note '''
+    """ create note """
     todo['owner'] = current_user
     todos_collections.insert_one(todo)
     return todo
 
 
 async def delete_todo(title: str, current_user: str):
+    """delete todo by current user"""
     delete = todos_collections.delete_one({"title": title, "owner": current_user})
     if delete:
         return True
@@ -77,6 +82,6 @@ async def delete_todo(title: str, current_user: str):
 
 
 async def update_todo(title: str, is_complete: bool, current_user: str):
-    update = todos_collections.update_one({"title": title, "owner": current_user}, {"$set": {"is_complete": is_complete}})
-    if update:
-        return todos_collections.find({"title": title})
+    """update todo status from current user"""
+    todos_collections.find_one_and_update({"title": title, "owner": current_user}, {"$set": {"is_complete": is_complete}})
+    return todos_collections.find({"title": title})

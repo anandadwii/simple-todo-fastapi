@@ -3,6 +3,7 @@ from routes.auth import get_current_user
 from fastapi import APIRouter, Depends, HTTPException, status
 import database as database
 from models import TodoResult, Todo
+
 router = APIRouter(
     prefix='/todo',
     tags=['Todos']
@@ -35,16 +36,16 @@ async def create_todos(todo: Todo, current_user: str = Depends(get_current_user)
 @router.delete('/{title}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_todo(title: str, current_user: str = Depends(get_current_user)):
     """delete todo by title in current user login"""
-    query = await database.delete_todo(title,current_user)
+    query = await database.delete_todo(title, current_user)
     if query:
-        return {"message":"deleted"}
+        return {"message": "deleted"}
     raise HTTPException(status_code=404, detail='todo not found')
 
 
-@router.put('/{title}', status_code= status.HTTP_202_ACCEPTED)
+@router.put('/{title}', status_code=status.HTTP_202_ACCEPTED)
 async def update_todo(title: str, is_complete: bool, current_user: str = Depends(get_current_user)):
     """update todo in current user login"""
     update = await database.update_todo(title, is_complete, current_user)
     if update:
-        return update
-    raise HTTPException(status_code=404, detail='wrong title dude')
+        return "data updated"
+    raise HTTPException(status_code=404, detail='cannot update')

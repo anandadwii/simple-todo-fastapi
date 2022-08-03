@@ -63,7 +63,6 @@ async def get_current_user(token: str = Depends(oauth2_bearer)):
 def create_access_token(data: dict):
     """create JWT for user login"""
     encode = data.copy()
-
     expire = datetime.now() + timedelta(minutes=20)
     encode.update({"exp": expire})
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
