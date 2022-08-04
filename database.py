@@ -37,7 +37,7 @@ async def delete_user(email: str):
     search = users_collection.find_one({'email': email})
     if search:
         users_collection.delete_one({'email': email})
-        users_collection.delete_many({'owner': email})
+        todos_collections.delete_many({'owner': email})
         return "deleted"
     raise HTTPException(status_code=404, detail='user not found')
 

@@ -12,7 +12,6 @@ router = APIRouter(
 
 @router.get('/', response_model=List[TodoResult], status_code=status.HTTP_200_OK)
 async def find_all(current_user: str = Depends(get_current_user)):
-    """fetch all todos in current login user"""
     request = await database.find_all_todo(current_user)
     return request
 
