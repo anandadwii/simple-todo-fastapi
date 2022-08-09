@@ -49,4 +49,5 @@ async def update_todo(title: str, owner: str, is_complete: bool, current_user: d
     update = await database.update_todo(title, is_complete, owner, current_user)
     if update:
         return "data updated"
+
     raise HTTPException(status_code=404, detail='cannot update')
