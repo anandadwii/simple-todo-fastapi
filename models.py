@@ -49,7 +49,7 @@ class Todo(BaseModel):
     # id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     title: str
     description: str
-    priority: int
+    priority: int = Field(gt=0, lt=6, description='the priority between 1-5')  # range 1-5
     is_complete: bool
 
     class Config:
