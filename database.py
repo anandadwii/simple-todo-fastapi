@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-from pymongo.errors import DuplicateKeyError
 from fastapi import HTTPException
 from models import TodoResult
 from pymongo.cursor import Cursor
