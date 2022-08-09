@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, status
 from routes.auth import get_current_user
 from models import User, UserResult, ChangePassword, NewPassword
 import database as database
@@ -10,7 +10,7 @@ router = APIRouter(
 )
 
 
-@router.post('/', response_model=User)
+@router.post('/', response_model=User, status_code=status.HTTP_201_CREATED)
 async def create_user(user: User, current_user: dict = Depends(get_current_user)):
     """create new user"""
     user = user.dict()
@@ -29,8 +29,7 @@ async def find_user_by_username(username: str, current_user: dict = Depends(get_
         return find
 
 
-
-@router.put('/',)
+@router.put('/')
 async def change_password(password: ChangePassword, current_user: dict = Depends(get_current_user)):
     """change password current user login"""
     password_parse = password.dict()
@@ -49,7 +48,7 @@ async def change_password_by_username(username: str, password: NewPassword, curr
     raise HTTPException(404, 'invalid credentials')
 
 
-@router.delete('/{username}')
+@router.delete('/{username}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user_by_username(username: str, current_user: dict = Depends(get_current_user)):
     """delete user by email"""
 
