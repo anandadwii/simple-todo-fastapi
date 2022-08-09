@@ -29,7 +29,7 @@ async def find_user_by_username(username: str, current_user: dict = Depends(get_
         return find
 
 
-@router.put('/')
+@router.put('/', status_code=status.HTTP_202_ACCEPTED)
 async def change_password(password: ChangePassword, current_user: dict = Depends(get_current_user)):
     """change password current user login"""
     password_parse = password.dict()
@@ -39,7 +39,7 @@ async def change_password(password: ChangePassword, current_user: dict = Depends
     raise HTTPException(404, 'invalid credentials')
 
 
-@router.put('/{username}')
+@router.put('/{username}', status_code=status.HTTP_202_ACCEPTED)
 async def change_password_by_username(username: str, password: NewPassword, current_user: dict = Depends(get_current_user)):
     """change password by admin and super admin"""
     response = await database.change_password_by_username(username, password.dict(), current_user)
