@@ -21,6 +21,7 @@ from pydantic import BaseModel, EmailStr, Field
 
 
 class User(BaseModel):
+    """model for User validation"""
     username: str
     email: EmailStr
     password: str
@@ -28,6 +29,7 @@ class User(BaseModel):
     is_active: bool = True
 
     class Config:
+        """config and example of user input"""
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
@@ -41,11 +43,13 @@ class User(BaseModel):
 
 
 class UserResult(BaseModel):
+    """model for user search"""
     username: str
     is_active: bool
 
 
 class Todo(BaseModel):
+    """model for todo validation"""
     # id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     title: str
     description: str
@@ -53,6 +57,7 @@ class Todo(BaseModel):
     is_complete: bool
 
     class Config:
+        """config and example of todo input"""
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
@@ -65,10 +70,12 @@ class Todo(BaseModel):
 
 
 class TodoResult(Todo):
+    """model for todo search"""
     owner: str
 
 
 class Token(BaseModel):
+    """model for token"""
     access_token: str
     token_type: str
 
@@ -77,15 +84,17 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    """ check email """
+    """ model for data of jwt data """
     username: Optional[str] = None
     authority: Optional[str] = None
 
 
 class ChangePassword(BaseModel):
+    """model for user's change password"""
     old_password: str
     new_password: str
 
 
 class NewPassword(BaseModel):
+    """model change user's password by admin or higher"""
     new_password: str
