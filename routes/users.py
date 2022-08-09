@@ -14,7 +14,6 @@ router = APIRouter(
 async def create_user(user: User, current_user: dict = Depends(get_current_user)):
     """create new user"""
     user = user.dict()
-
     response = await database.create_user(user, current_user)
     return response
 
@@ -51,7 +50,6 @@ async def change_password_by_username(username: str, password: NewPassword, curr
 @router.delete('/{username}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user_by_username(username: str, current_user: dict = Depends(get_current_user)):
     """delete user by email"""
-
     response = await database.delete_user(username, current_user)
     if response:
         return response
