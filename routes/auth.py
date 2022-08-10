@@ -7,9 +7,11 @@ from jose import jwt, JWTError
 from starlette import status
 import database as database
 from util import verify_password
+from config import base
 
-SECRET_KEY = "Ni&g*gYU*UHb&*Tf%^UifUiHBN87("
-ALGORITHM = "HS256"
+settings = base.Settings()
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
 EXPIRE_TIME_TOKEN = 20
 
 router = APIRouter(
@@ -25,6 +27,8 @@ async def user_login_get_token(user_credential: OAuth2PasswordRequestForm = Depe
     """login to obtain JWT token"""
     query = await database.find_user(user_credential.username)
     if query:
+        if not query['is_active']:
+            raise HTTPException(404, 'user not active')
         if await verify_password(user_credential.password, query['password']):
             access_token_expires = timedelta(minutes=EXPIRE_TIME_TOKEN)
             access_token = create_access_token(data={"username": user_credential.username,

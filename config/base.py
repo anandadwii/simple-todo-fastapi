@@ -6,7 +6,8 @@ class Settings(BaseSettings):
     DB_NAME: str
     SERVER_PORT: int
     SERVER_IP: str
-
+    SECRET_KEY: str
+    ALGORITHM: str
 
     class Config:
         env_file = '.env'

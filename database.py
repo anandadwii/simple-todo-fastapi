@@ -7,7 +7,6 @@ from config import base
 
 settings = base.Settings()
 client = MongoClient(settings.MONGO_URI)
-
 database = client[settings.DB_NAME]
 
 users_collection = database["users"]
