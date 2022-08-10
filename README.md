@@ -10,6 +10,7 @@ technology used in this work:
 - pydantic 
 - mongoDB with pymongo
 - JWT Token
+- bcrypt 
 
 ## How To Install 
 - install mongo or mongodb compass and make sure port `27017` is not used
